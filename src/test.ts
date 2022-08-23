@@ -1,15 +1,15 @@
 import { useDatabase } from "./utils/useDatabase";
 
-async function saveData() {
+export async function saveData() {
     const prisma = useDatabase();
     let res = await prisma.tags.create({
         data: {
             name: "",
             publisher: "",
             advertiser: "",
-            browser: "",
-            deviceType: "",
-            version: "",
+            browser: "Firefox",
+            deviceType: "desktop",
+            version: "103.0",
             country: "",
             company: "companies/120404623",
             adServerUrl: "",
@@ -40,4 +40,3 @@ async function saveData() {
     console.log(res);
 }
 
-saveData().then(() => console.log("done"));

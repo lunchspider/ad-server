@@ -19,7 +19,11 @@ class SearchController implements Controller {
             res.status(400).json({ message: "rejected!" });
         };
         try {
-            const { id, subid } = req.params;
+            const id : string = String(req.query.id);
+            const subid : string = String(req.query.subid);
+            if(!id || !subid){
+                return rejected();
+            }
             const ua = req.headers["user-agent"];
             if (!ua) {
                 return rejected();
@@ -42,18 +46,20 @@ class SearchController implements Controller {
             });
             if (!tag) {
                 // tag not found rejecting
+                console.log("tag not found!");
                 return rejected();
             }
             if (
                 tag.subids.find((val) => val.subid == subid)!.limit >
                 getState().currentTotalTraffic
             ) {
+                console.log("we are here!");
                 setState({
                     currentTotalTraffic: getState().currentTotalTraffic + 1,
                     currentAllowedTraffic: getState().currentAllowedTraffic + 1,
                 });
-                // continue query here
             } else {
+                console.log("limit reached!");
                 setState({
                     currentRejectedTraffic:
                         getState().currentRejectedTraffic + 1,
@@ -62,7 +68,7 @@ class SearchController implements Controller {
                 return rejected();
             }
             // phase 2 here
-            res.json({ message: "yo everything is ok!!" });
+            res.json(tag);
         } catch (e) {
             return rejected();
         }
